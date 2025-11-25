@@ -1,0 +1,682 @@
+---
+title: "Homework"
+format: 
+  html:
+    toc: true
+    theme: yeti
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = T, cache = T)
+```
+
+Please, using quarto (or rmarkdown), answer the questions below. You can use the class notes, the recommended books, and other web materials to help answer the questions. You can work on the homework in groups, but please independently submit a pdf document containing answers and code. If it is easier, the pdf can be converted from an html output file (i.e. print the html as pdf from web browser).
+
+**In three weeks (11/6/25 by 11:59pm)**, please submit your pdf file to CANVAS using the following filename structure LastName_HW1_Filetype_Date (e.g., Santos_HW1_R_20251106). Again, you can share and work together on the code, but independently, submit your answers to the short answer questions in your own words and as markdown text under each question. Here are links to resources about [quarto](https://r4ds.hadley.nz/quarto).
+
+Please reach out if you have any questions about the hw or how to make a pdf using quarto.
+
+## Data for questions
+
+For the majority of the homework, you will use a fish survey dataset from the Moorea Coral Reef (MCR) Long term ecological research (LTER) [site](https://mcr.lternet.edu/). This [dataset](https://portal.edirepository.org/nis/mapbrowse?packageid=knb-lter-mcr.6.62) describes the species abundance and estimated size distributions (total body length to the greatest precision possible) of fishes surveyed as part of MCR LTER's annual reef fish monitoring program. The metadata for this dataset can be found [here](https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-mcr.6.62).
+
+## Section 1 (38 pts)
+
+1.  Upload the MCR LTER annual fish survey data from the course github <https://github.com/SeascapeEcologyLab-workshops/BSC6926-B52_Fall2025/blob/main/data/MCR_LTER_Annual_Fish_Survey_20230615.csv> into R-Studio. Using R, create a new dataset that includes the top species of each of the 4 coarse trophic guilds (primary consumer, piscivore, planktivore, and secondary consumer) based on the total abundance across the entire dataset. Please use Nt to name the column for abundance data. The metadata could be useful (see above) (3 pts).\
+
+```{r}
+library(tidyverse)
+
+reeffish = read_csv("./data/MCR_LTER_Annual_Fish_Survey_20230615.csv")
+
+reeffish_top = reeffish |> 
+      group_by(Taxonomy, Coarse_Trophic) |> 
+      summarize(n = sum(Count)) |> 
+      group_by(Coarse_Trophic) |> 
+      slice_max(n) |> 
+      ungroup() |> 
+      filter(!(Coarse_Trophic %in% c('na', NA, 'Unknown_coarse')))
+
+df = reeffish |> 
+      filter(Taxonomy %in% reeffish_top$Taxonomy) |> 
+      mutate(Year = as.numeric(Year)) |> 
+      group_by(Year, Taxonomy, Habitat) |> 
+      summarize(Nt = sum(Count),
+                .groups = 'drop') 
+
+```
+
+
+2.  Plot total annual abundance for each species with a panel for each habitat (2 pts).\
+```{r}
+ggplot(df, aes(Year, Nt, color = Taxonomy))+
+  geom_point()+
+  geom_line()+
+  facet_grid(cols = vars(Habitat), rows = vars(Taxonomy), scales = 'free_y')+
+  theme_bw()
+```
+
+
+3.  Short Essay Question: How do the temporal trends of reef fish vary between habitats and trophic guilds (5 pts)?\
+
+4.  Using R, calculate lambda from one year to the next (i.e., for each time step) for each habitat and species. Try using either a for-loop or functions (1 pt).\
+```{r}
+df = reeffish |> 
+      filter(Taxonomy %in% reeffish_top$Taxonomy) |> 
+      mutate(Year = as.numeric(Year)) |> 
+      group_by(Taxonomy, Habitat, Year) |> 
+      summarize(Nt = sum(Count)) |> 
+      # arrange(TaxoYear) |>
+      # group_by(Taxonomy, Habitat) |> 
+      # nest()
+      mutate(lambda = lead(Nt)/Nt)
+```
+
+
+5.  Calculate the mean(λ) and sd(λ) for the each habitat/species combination using your calculation from Q1.4. Remember to use the geometric mean and its standard deviation (1 pt).\
+```{r}
+library(DescTools)
+
+g = df |>  
+      group_by(Taxonomy, Habitat) |> 
+      summarize(mean = Gmean(lambda, na.rm = T),
+                sd = Gsd(lambda, na.rm = T),
+                .groups = 'drop')
+
+g
+```
+
+
+6.  Using ggplot, plot the  mean(λ) calculated in question 5 and the sd(λ). Add a horizontal line when population growth = 0. Make a panel for each habitat to compare lambdas between species (3 pts).\
+```{r}
+ggplot(g, aes(Taxonomy, mean, color = Taxonomy))+
+  geom_pointrange(aes(ymin = mean - sd, ymax = mean + sd), size = 1, linewidth = 1.5)+
+  geom_hline(aes(yintercept = 1), linetype = 'dashed', linewidth = 1)+
+  scale_color_viridis_d()+
+  facet_wrap(~Habitat)+
+  labs(x = 'Species', y = 'λ')+
+  coord_flip()+
+  theme_bw()+
+  theme(legend.position = 'none')
+```
+
+
+7.  Based on the mean and variance in the finite rate of increase, which populations are growing on average, which populations are declining on average, and which have the highest likelihood of collapse/crash? Hint: See Gotelli Chapter 1 equation 1.9 (5 pts).\
+
+8.  Estimate $K$ from $\lambda$ and abundance estimates at the habitat level (i.e., total population) for each species. Hint: Remember the linear relationship between density and per-capita growth rate in the density-dependent model discussed in class and the workshop (3 pts).\
+
+```{r}
+df = reeffish |> 
+      filter(Taxonomy %in% reeffish_top$Taxonomy) |> 
+      mutate(Year = as.numeric(Year)) |> 
+      group_by(Taxonomy, Habitat, Year) |> 
+      summarize(Nt = sum(Count)) |> 
+      # arrange(TaxoYear) |>
+      # group_by(Taxonomy, Habitat) |> 
+      # nest()
+      mutate(lambda = lead(Nt)/Nt,
+             percap = (lead(Nt)-Nt)/Nt)
+
+ggplot(df |> drop_na(), aes(Nt, percap, color = Taxonomy)) + 
+      geom_hline(aes(yintercept = 0))+
+      geom_smooth(method = 'lm') +
+      geom_point(size = 2) +
+      facet_grid(cols = vars(Habitat), rows = vars(Taxonomy), scales = 'free')+
+      labs(x = expression(italic(N[t])),
+           y =  expression('per capita growth ('~italic(Delta~N[t]/N[t])~')'))+
+      scale_color_viridis_d(option = 'turbo')+
+      theme_bw()+
+      theme(legend.position = 'none')
+
+
+# calculate carry capacity 
+df_k = df |> 
+      ungroup() |> 
+      drop_na() |> 
+      group_by(Taxonomy, Habitat) |> 
+      nest() |> 
+      mutate(lm = map(data, \(data) lm(percap~ Nt, data = data)),
+             K = map_dbl(lm, \(lm) -lm$coefficients[1]/lm$coefficients[2])) |> 
+      select(Taxonomy, K)
+
+
+df_k
+```
+
+
+9.  Using a discrete density-dependent growth model, project the population growth for each species at each habitat to 150 years based on the carrying capacity values estimated in Q8 and a starting population size of 500 individuals. Hint: $1 + r_d = \lambda$; See Gotelli pages 35-37 and pages Stevens 62-68 (3 pts).\
+
+```{r}
+g = df |>  
+      group_by(Taxonomy, Habitat) |> 
+      summarize(mean = Gmean(lambda, na.rm = T),
+                sd = Gsd(lambda, na.rm = T),
+                .groups = 'drop') |> 
+      mutate(rd = mean -1) |> 
+  drop_na()
+
+# logistic growth funciton 
+dlogisticD = function(K, rd, N_0, years) {
+  logis = tibble(Nt = NA, time = 0:years)
+  logis$Nt[logis$time == 0] = N_0
+  
+  for(i in 1:(length(logis$time)-1)){
+    logis$Nt[i+1] = logis$Nt[i]  + rd*logis$Nt[i]*(1 - logis$Nt[i] / K)
+  }
+  return(logis)
+}
+
+popdd = df_k |> 
+      right_join(g) |> 
+      mutate(Nt = map2(K, rd, \(K, rd) dlogisticD(K, rd, N_0 = 500, years = 150))) |> 
+      unnest(Nt)
+
+
+```
+
+
+10. Using the discrete density-independent growth model, project the population for each species at each habitat using a random $\lambda$ the mean and sd calculated in question 6 above. Using the same starting population size of 500 individuals and for 150 years. Repeat this process 50 times and calculate the mean and standard deviation of the population size for each time step across the 50 iterations. (5 pts)\  
+
+```{r}
+g = df |>  
+      group_by(Taxonomy, Habitat) |> 
+      summarize(mean = Gmean(lambda, na.rm = T),
+                sd = Gsd(lambda, na.rm = T),
+                .groups = 'drop') |> 
+      mutate(rd = mean -1) |> 
+  drop_na()
+
+# logistic growth funciton 
+dirand = function(l_mean, l_sd, N_0, years) {
+  pop = tibble(Nt = NA, time = 0:years) |> 
+    mutate(Nt = if_else(time == 0, N_0, Nt),
+           lambda = truncnorm::rtruncnorm(n(), mean = l_mean, sd = l_sd, a=0, b=Inf))
+  
+  for(i in 2:nrow(pop)){
+    pop$Nt[i] = pop$lambda[i-1] * pop$Nt[i-1]
+  }
+
+  return(pop)
+}
+reps = 50
+
+pop = g |> 
+      slice(rep(1:n(), each=reps))|> 
+      mutate(i = rep(1:reps, times=nrow(g)),
+             Nt = map2(mean, sd, \(mean, sd) dirand(mean, sd, N_0 = 500, years = 150))) |>
+      unnest(Nt) |> 
+      group_by(Taxonomy, Habitat, time) |> 
+      summarize(mean = mean(Nt),
+                sd = sd(Nt))
+
+
+
+```
+
+
+11.  Using ggplot, plot the population projections for each species and habitat for questions 9 and 10. For the density independent populations plot both the mean and sd of the projections, and plot one panel per species and habitat combination (2 pt).\
+*-Hint: For the density independent plot, plot the trend line with error bounds*
+```{r}
+ggplot(popdd, aes(time, Nt))+
+  geom_point()+
+  geom_line()+
+  facet_grid(cols = vars(Habitat), rows = vars(Taxonomy), scales = 'free_y')+
+  theme_bw()
+      
+
+ggplot(pop, aes(time, mean))+
+  geom_ribbon(aes(ymin = mean-sd, ymax = mean+sd), fill = 'grey80')+
+  geom_point()+
+  geom_line()+
+  facet_grid(cols = vars(Habitat), rows = vars(Taxonomy), scales = 'free')+
+  theme_bw()
+```
+
+
+
+12.  Short essay question: How do the projections for each species differ? Did the population get as far as the carrying capacity? Why or why not? If not, how many years are required to reach the carrying capacity? When at carrying capacity, do the population fluctuate around K? Why or Why not? How do the different model types compare (5 pts)\
+
+## Section 2 (20 pts)
+
+![](table1.png)
+
+1.  Convert Table 1 from [Lirman et al. 2003](https://www.sciencedirect.com/science/article/pii/S0304380002003460) above into a projection matrix (1 pt).
+```{r}
+A = matrix(c(0.9,0.15,0.05,0.1,0.45,0,0.06,0.25,0.45), nrow = 3, byrow = T)
+A
+```
+
+
+2.  Create a starting population vector based on the life stages of this coral species: colonies (N = 100), fragments (N = 0), crust (N = 0). Project the population up to 50 years using the starting population vector and the projection matrix you created (hint: A%\*%n(t); See Stevens Chapter 2 pages 34-40) Repeat the process with 100 individuals for fragments and 0 for the other life stages.(6 pts). 
+```{r}
+library(popbio)
+nc = c(colonies = 100, fragments = 0, crusts = 0)
+
+popc = pop.projection(A, nc, 50)
+
+nf = c(colonies = 0, fragments = 100, crusts = 0)
+
+popf = pop.projection(A, nf, 50)
+```
+
+
+3.  Plot your results using ggplot, popbio, or base R plotting functions. Plot the projection for each stage class (2 pts).
+```{r}
+stage.vector.plot(popc$stage.vectors)
+
+stage.vector.plot(popf$stage.vectors)
+```
+
+
+4.  Short essay question: Looking at the plot from Q3, did the population projections reach a stable stage distribution? Why or why not? What could you tell about the fate of the populations after 50 years? How do the population sizes differ depending on the different stage specific starting abundances (5 pts)?
+
+5.  Based on the project matrix above, calculate lambda and calculate the stable stage distribution (1 pt).
+```{r}
+popc$lambda
+popc$stable.stage
+
+popf$lambda
+popf$stable.stage
+```
+
+
+6.  Short essay question: What is the proportion between the stages at SSD? What stage is the dominant stage of the population after the stable stage distribution is reached? Why? (5 pts).
+
+## Section 3 - Exploratory Analysis of the Community (20 pts)
+1. Upload the MCR fish survey data and calculate the total abundance of each species at each habitat per year. (5pts) \
+
+```{r}
+reeffish = read_csv("./data/MCR_LTER_Annual_Fish_Survey_20230615.csv")
+
+df = reeffish |> 
+      mutate(Year = as.numeric(Year)) |> 
+      group_by(Year, Taxonomy, Habitat) |> 
+      summarize(abund = sum(Count),
+                .groups = 'drop') |> 
+      drop_na()
+```
+
+
+2. Identify the species that account for 75% of the abundance across the entire time series. (5 pts).\
+
+```{r}
+df75 = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      #drop_na(Year) |> 
+      group_by(Taxonomy) |> 
+      summarize(ab = sum(Count), .groups = 'drop') |> 
+      arrange(-ab) |> 
+      mutate(prop = cumsum(ab)/sum(ab, na.rm = T)) |> 
+      filter(prop < 0.75) 
+
+df75$Taxonomy
+```
+
+
+3. Calculate the average total abundance per year at each habitat for each of the species that make up 75% of the abundance, and plot the average abundance for each species at each site using a heat map (5 pts). 
+*-Hint: `geom_raster()`.*
+```{r}
+df_aa = df |> 
+      filter(Taxonomy %in% df75$Taxonomy) |> 
+      group_by(Year, Habitat, Taxonomy) |>
+      summarize(abund = mean(abund))
+
+
+ggplot(df_aa, aes(Habitat, Taxonomy))+
+      geom_raster(aes(fill = log(abund)))+
+      scale_fill_viridis_c(option = 'mako')+
+      theme_bw()
+```
+
+
+
+4. *Short essay question 1.1:* Based on the heatmaps, what can you conclude about the communities/assemblages across habitat? (5 pts)
+
+## Section 4 – Univarite metrics of diversity (20 pts)
+1. Using the `vegan` package or a for loop, calculate the species richness, inverse Simpson index, and Shannon index ($H$) per year for each site (5 pts).\
+```{r}
+library(vegan)
+# with only 75% 
+df = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      filter(Taxonomy %in% df75$Taxonomy) |> 
+      group_by(Year, Site, Taxonomy) |> 
+      summarize(abund = sum(Count), .groups = 'drop') |> 
+      pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
+      nest(.by = c(Site, Year)) |> 
+      mutate(sr = map_dbl(data, \(data) specnumber(data)),
+             inv = map_dbl(data, \(data) diversity(data, 'inv')),
+             H = map_dbl(data, \(data) diversity(data)))
+
+df
+
+df_hab = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      filter(Taxonomy %in% df75$Taxonomy) |> 
+      group_by(Year, Habitat, Taxonomy) |> 
+      summarize(abund = sum(Count), .groups = 'drop') |> 
+      pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
+      nest(.by = c(Habitat, Year)) |> 
+      mutate(sr = map_dbl(data, \(data) specnumber(data)),
+             inv = map_dbl(data, \(data) diversity(data, 'inv')),
+             H = map_dbl(data, \(data) diversity(data)))
+
+df_hab
+```
+
+
+2. Calculate the rarefaction species richness of each habitat and year. Plot the distribution of points at each site (e.g. boxplot) (5 pts)\
+*-Hint: Make a column that contains both the site and the year to use as rownames of your matrix*
+
+```{r}
+df = df |> 
+      mutate(rare = map_dbl(data, \(data) rarefy(data, sample = 50)))
+
+ggplot(df, aes(as.character(Site), rare, fill = Site))+
+      geom_jitter(aes(color = Site), size = 2)+
+      geom_boxplot(alpha = 0.6, outliers = F)+
+      labs(x = 'Site', y = 'Rarefaction species richness')+
+      scale_color_viridis_c(option = 'turbo')+
+      scale_fill_viridis_c(option = 'turbo')+
+      theme_bw()+
+      theme(legend.position = 'none')
+
+# habitat data
+df_hab = df_hab |> 
+      mutate(rare = map_dbl(data, \(data) rarefy(data, sample = 50)))
+
+ggplot(df_hab, aes(Habitat, rare, fill = Habitat))+
+      geom_jitter(aes(color = Habitat), size = 2)+
+      geom_boxplot(alpha = 0.6, outliers = F)+
+      labs(x = 'Site', y = 'Rarefaction species richness')+
+      scale_color_viridis_d(option = 'turbo')+
+      scale_fill_viridis_d(option = 'turbo')+
+      theme_bw()+
+      theme(legend.position = 'none')
+```
+
+
+3. Plot each diversity metric from question 1 and for each year and site (3 pts).\
+```{r}
+met = df |> 
+      select(-data) |> 
+      pivot_longer(sr:rare, names_to = 'metric', values_to = 'value')
+
+ggplot(met, aes(as.numeric(Year), value, group = Site, color = Site))+
+      geom_point(size = 2)+
+      geom_line(linewidth = 1)+
+      labs(x = 'Year', y = 'Metric')+
+      scale_color_viridis_c(option = 'turbo')+
+      facet_wrap(~metric, scales = 'free')+
+      theme_bw()+
+      theme(legend.position = 'bottom')
+
+
+met_hab = df_hab |> 
+      select(-data) |> 
+      pivot_longer(sr:rare, names_to = 'metric', values_to = 'value')
+
+ggplot(met_hab, aes(as.numeric(Year), value, group = Habitat, color = Habitat))+
+      geom_point(size = 2)+
+      geom_line(linewidth = 1)+
+      labs(x = 'Year', y = 'Metric')+
+      scale_color_viridis_d(option = 'turbo')+
+      facet_wrap(~metric, scales = 'free')+
+      theme_bw()+
+      theme(legend.position = 'bottom')
+
+
+```
+
+
+4. *Short essay question 2.1:* Based on species richness, Simpson, and Shannon indices and rarefraction species richness, what is happening to species diversity across sites and years? What can you tell about species evenness by looking at the plot? (7 pts).\
+
+## Section 5 - Community assemblage dissimilarities (20 pts)
+1. Create a community matrix with the total abundance per species per habitat per site (5 pts).\
+```{r}
+m = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      filter(Taxonomy %in% df75$Taxonomy) |> 
+      group_by(Year, Site, Taxonomy) |> 
+      summarize(abund = sum(Count), .groups = 'drop') |> 
+      pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
+      unite(sy, c('Site', 'Year')) |> 
+      column_to_rownames('sy')
+
+m_hab = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      filter(Taxonomy %in% df75$Taxonomy) |> 
+      group_by(Year, Habitat, Taxonomy) |> 
+      summarize(abund = sum(Count), .groups = 'drop') |> 
+      pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
+      unite(hy, c('Habitat', 'Year')) |> 
+      column_to_rownames('hy')
+
+m_sh = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      filter(Taxonomy %in% df75$Taxonomy) |> 
+      group_by(Site, Habitat, Taxonomy) |> 
+      summarize(abund = sum(Count), .groups = 'drop') |> 
+      pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
+      unite(hy, c('Habitat', 'Site')) |> 
+      column_to_rownames('hy')
+```
+
+
+2. Calculate the Jaccard dissimilarity and identify which points have the lowest and highest dissimilarity (5 pts).
+*-Hint: Make a column that contains both the site and the year to use as rownames of your matrix*
+
+```{r}
+# site year
+jd = vegdist(m, method = 'jaccard') |> as.matrix()
+
+which(jd == min(jd[jd != 0]), arr.ind = TRUE)
+
+which(jd == max(jd[jd != 0]), arr.ind = TRUE)
+
+# habitat year
+jd_hab = vegdist(m_hab, method = 'jaccard') |> as.matrix()
+
+which(jd_hab == min(jd_hab[jd_hab != 0]), arr.ind = TRUE)
+
+which(jd_hab == max(jd_hab[jd_hab != 0]), arr.ind = TRUE)
+
+
+# habitat site
+jd_sh = vegdist(m_sh, method = 'jaccard') |> as.matrix()
+
+which(jd_sh == min(jd_sh[jd_sh != 0]), arr.ind = TRUE)
+
+which(jd_sh == max(jd_sh[jd_sh != 0]), arr.ind = TRUE)
+
+```
+
+
+3. Project dissimilarity into 2-dimensional space using nonmetric multidimensional scaling and illustrate the results in a biplot (5 pts).
+
+```{r}
+# site year
+nmds.jc = metaMDS(m, distance = "jaccard", k = 2, try = 100)
+
+nmds_output = data.frame(nmds.jc[["points"]]) |> 
+      rownames_to_column('sy') |> 
+      separate(sy, into = c("Site", "Year"), sep = "_")
+
+ggplot(nmds_output, aes(MDS1, MDS2, color = Site))+
+  geom_point(size = 4)+
+  scale_color_viridis_d(option = 'turbo')+
+  theme_bw()
+
+# hab year
+nmds.jc_hab = metaMDS(m_hab, distance = "jaccard", k = 2, try = 100)
+
+nmds_output_hab = data.frame(nmds.jc_hab[["points"]]) |> 
+      rownames_to_column('sy') |> 
+      separate(sy, into = c("Habitat", "Year"), sep = "_")
+
+ggplot(nmds_output_hab, aes(MDS1, MDS2, color = Habitat))+
+  geom_point(size = 4)+
+  scale_color_viridis_d(option = 'turbo')+
+  theme_bw()
+
+# sh year
+nmds.jc_sh = metaMDS(m_sh, distance = "jaccard", k = 2, try = 100)
+
+nmds_output_sh = data.frame(nmds.jc_sh[["points"]]) |> 
+      rownames_to_column('sy') |> 
+      separate(sy, into = c("Habitat", "Site"), sep = "_")
+
+ggplot(nmds_output_sh, aes(MDS1, MDS2, color = Habitat))+
+  geom_point(size = 4)+
+  scale_color_viridis_d(option = 'turbo')+
+  theme_bw()
+```
+
+
+4. *Short essay question 3.1:* Based on the nMDS, what can you conclude about the communities/assemblages across habitats? (5 pts)
+
+## Section 6 - Community trajectory (20 pts)
+
+1. Plot the yearly trajectory for each habitat and site using Bray-Curtis dissimilarity on a community matrix of the top 10 species based on total abundance across all sites and habitats (5 pts).\
+```{r}
+df10 = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      group_by(Taxonomy) |> 
+      summarize(n = sum(Count)) |> 
+      slice_max(n,n = 10)
+
+df = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      filter(Taxonomy %in% df10$Taxonomy) |> 
+      group_by(Site, Habitat, Year, Taxonomy) |> 
+      summarize(abund = sum(Count), .groups = 'drop') |> 
+      pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
+      unite(hy, c('Habitat', 'Site', 'Year')) |> 
+      column_to_rownames('hy')
+
+
+nmds.br = metaMDS(df, distance = "bray", k = 2, try = 100)
+
+# convert nMDS to tibble
+df_nmds = data.frame(nmds.br[["points"]]) |> 
+      rownames_to_column('sy') |> 
+      separate(sy, into = c('Habitat', "Site", "Year"), sep = "_") |> 
+      # add end points of each segment for arrow
+      group_by(Site) |> 
+      mutate(xend = lead(MDS1), yend = lead(MDS2))
+
+
+# plot 
+ggplot(df_nmds, aes(MDS1, MDS2))+
+      geom_segment(aes(xend = xend, yend = yend, color = Site),
+                   linewidth = 1,
+                   arrow = arrow(length = unit(0.25, "cm")))+
+      #ggrepel::geom_text_repel(aes(label=Year))+
+      facet_wrap(~Habitat)+
+      labs(x = 'NMDS1', y = 'NMDS2',
+           color = 'Site')+
+      scale_color_viridis_d(option = 'turbo')+
+      theme_bw()+
+      theme(legend.position = 'bottom')
+
+# plot 
+ggplot(df_nmds, aes(MDS1, MDS2))+
+      geom_segment(aes(xend = xend, yend = yend, color = Habitat),
+                   linewidth = 1,
+                   arrow = arrow(length = unit(0.25, "cm")))+
+      #ggrepel::geom_text_repel(aes(label=Year))+
+      facet_wrap(~Site)+
+      labs(x = 'NMDS1', y = 'NMDS2',
+           color = 'Habitat')+
+      scale_color_viridis_d(option = 'turbo')+
+      theme_bw()+
+      theme(legend.position = 'bottom')
+```
+
+
+2. Calculate the total path length for each site/habitat combination (2 pts).
+```{r}
+
+meta = tibble(nam = row.names(df)) |> 
+  separate(nam, into = c('Habitat', "Site", "Year"), sep = "_") |> 
+  mutate(hab_site = paste(Habitat, Site, sep = '_'))
+
+# site data
+site = meta$hab_site
+
+# survey 
+survey = meta$Year |> as.numeric()
+
+dist = vegdist(df, method = 'bray')
+
+library(ecotraj)
+# define trajectory
+d = defineTrajectories(dist, sites = site, surveys =survey)
+
+trajectoryLengths(d)
+
+tl = trajectoryLengths(d) |> 
+      rownames_to_column(var = 'site') |> 
+      as_tibble() |> 
+      separate(site, into = c("Habitat", "Site"), sep = "_")
+
+# total trajectory length 
+ggplot(tl, aes(Habitat, Path, fill = Site))+
+      geom_col(position = 'dodge')+
+      labs(x = 'site', y = 'Trajectory total distance')+
+      scale_fill_viridis_d()+
+      theme_bw()+
+      theme(legend.position = 'bottom')
+
+# total trajectory length 
+ggplot(tl, aes(Site, Path, fill = Habitat))+
+      geom_col(position = 'dodge')+
+      labs(x = 'site', y = 'Trajectory total distance')+
+      scale_fill_viridis_d(option = 'turbo')+
+      theme_bw()+
+      theme(legend.position = 'bottom')
+```
+
+
+3. Plot the speed of change for each yearly time step at each site (3 pts).\
+```{r}
+# segment length 
+tll = tl |> 
+      pivot_longer(S1:S16, names_to = 'seg', values_to = 'len') |> 
+      mutate(seg = factor(seg, levels = c('S1', 'S2','S3', 'S4',
+                                          'S5', 'S6','S7', 'S8',
+                                          'S9', 'S10','S11',
+                                          'S12', 'S13', 'S14',
+                                          'S15', 'S16')))
+
+# plot 
+ggplot(tll, aes(seg, len, group = Site, color = Site))+
+      geom_point(size = 2.5)+
+      geom_line(linewidth = 1)+
+      labs(x = 'Segment', y = 'Speed of change')+
+      scale_x_discrete(labels =c('2006-2007', '2007-2008', '2008-2009',
+                      '2009-2010', '2010-2011', '2011-2012',
+                      '2012-2013', '2013-2014', '2014-2015',
+                      '2015-2016', '2016-2017', '2017-2018',
+                      '2018-2019', '2019-2020', '2020-2021', 
+                      '2021-2022' ))+
+      scale_color_viridis_d(option = 'turbo')+
+      facet_wrap(~Habitat)+
+      theme_bw()+
+      theme(legend.position = 'bottom',
+            axis.text.x = element_text(angle = 90))
+
+# plot 
+ggplot(tll, aes(seg, len, group = Habitat, color = Habitat))+
+      geom_point(size = 2.5)+
+      geom_line(linewidth = 1)+
+      labs(x = 'Segment', y = 'Speed of change')+
+      scale_x_discrete(labels =c('2006-2007', '2007-2008', '2008-2009',
+                      '2009-2010', '2010-2011', '2011-2012',
+                      '2012-2013', '2013-2014', '2014-2015',
+                      '2015-2016', '2016-2017', '2017-2018',
+                      '2018-2019', '2019-2020', '2020-2021', 
+                      '2021-2022' ))+
+      scale_color_viridis_d(option = 'turbo')+
+      facet_wrap(~Site)+
+      theme_bw()+
+      theme(legend.position = 'bottom',
+            axis.text.x = element_text(angle = 90))
+```
+
+
+3. *Short essay question 3.1:* Based on the community trajectory, speed of change, and total path lengths, how does the community trajectory across each site/habitat compare? Are there any years where there was synchronous change at each sites or habitats? (5 pts).
+
+
