@@ -359,6 +359,19 @@ df_hab = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |>
              H = map_dbl(data, \(data) diversity(data)))
 
 df_hab
+
+df_hab_all = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      #filter(Taxonomy %in% df75$Taxonomy) |> 
+      group_by(Year, Habitat, Taxonomy) |> 
+      summarize(abund = sum(Count), .groups = 'drop') |> 
+      pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
+      nest(.by = c(Habitat, Year)) |> 
+      mutate(sr = map_dbl(data, \(data) specnumber(data)),
+             inv = map_dbl(data, \(data) diversity(data, 'inv')),
+             H = map_dbl(data, \(data) diversity(data))) |> 
+  drop_na(sr)
+
+df_hab_all
 ```
 
 
@@ -383,6 +396,19 @@ df_hab = df_hab |>
       mutate(rare = map_dbl(data, \(data) rarefy(data, sample = 50)))
 
 ggplot(df_hab, aes(Habitat, rare, fill = Habitat))+
+      geom_jitter(aes(color = Habitat), size = 2)+
+      geom_boxplot(alpha = 0.6, outliers = F)+
+      labs(x = 'Site', y = 'Rarefaction species richness')+
+      scale_color_viridis_d(option = 'turbo')+
+      scale_fill_viridis_d(option = 'turbo')+
+      theme_bw()+
+      theme(legend.position = 'none')
+
+# not 75% of data
+df_hab_all = df_hab_all |> 
+      mutate(rare = map_dbl(data, \(data) rarefy(data, sample = 50)))
+
+ggplot(df_hab_all, aes(Habitat, rare, fill = Habitat))+
       geom_jitter(aes(color = Habitat), size = 2)+
       geom_boxplot(alpha = 0.6, outliers = F)+
       labs(x = 'Site', y = 'Rarefaction species richness')+
@@ -423,6 +449,19 @@ ggplot(met_hab, aes(as.numeric(Year), value, group = Habitat, color = Habitat))+
       theme(legend.position = 'bottom')
 
 
+met_hab_all = df_hab_all |> 
+      select(-data) |> 
+      pivot_longer(sr:rare, names_to = 'metric', values_to = 'value')
+
+ggplot(met_hab_all, aes(as.numeric(Year), value, group = Habitat, color = Habitat))+
+      geom_point(size = 2)+
+      geom_line(linewidth = 1)+
+      labs(x = 'Year', y = 'Metric')+
+      scale_color_viridis_d(option = 'turbo')+
+      facet_wrap(~metric, scales = 'free')+
+      theme_bw()+
+      theme(legend.position = 'bottom')
+
 ```
 
 
@@ -454,6 +493,15 @@ m_sh = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |>
       pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
       unite(hy, c('Habitat', 'Site')) |> 
       column_to_rownames('hy')
+
+m_sh_a = read_csv("data/MCR_LTER_Annual_Fish_Survey_20230615.csv") |> 
+      #filter(Taxonomy %in% df75$Taxonomy) |> 
+      group_by(Site, Habitat, Taxonomy) |> 
+      summarize(abund = sum(Count), .groups = 'drop') |> 
+      drop_na(Taxonomy) |> 
+      pivot_wider(names_from = Taxonomy, values_from = abund, values_fill = 0) |> 
+      unite(hy, c('Habitat', 'Site')) |> 
+      column_to_rownames('hy')
 ```
 
 
@@ -482,6 +530,14 @@ jd_sh = vegdist(m_sh, method = 'jaccard') |> as.matrix()
 which(jd_sh == min(jd_sh[jd_sh != 0]), arr.ind = TRUE)
 
 which(jd_sh == max(jd_sh[jd_sh != 0]), arr.ind = TRUE)
+
+
+# habitat site all 
+jd_sh_a = vegdist(m_sh_a, method = 'jaccard') |> as.matrix()
+
+which(jd_sh_a == min(jd_sh_a[jd_sh_a != 0]), arr.ind = TRUE)
+
+which(jd_sh_a == max(jd_sh_a[jd_sh_a != 0]), arr.ind = TRUE)
 
 ```
 
