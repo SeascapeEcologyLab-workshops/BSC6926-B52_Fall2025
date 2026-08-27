@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,14 +69,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2ae7dbb6a8a91d2d75a298d77e53d9d4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3888dca8199a5a393ede4c77885204b8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -119,7 +120,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -289,15 +290,15 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="community-data">Community Data</h2>
 <p>Community data can vary in format, but typically involves abundance, biomass, or CPUE data for multiple species collected in each sample. Data can be stored in wide (species ID for each column) or long format. The <code>vegan</code> package can be useful for calculating diversity metrics. <code>vegan</code> calculates metrics from a community matrix (long format).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate metrics for each pool</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate metrics for each pool</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ dplyr     1.1.4     ✔ readr     2.1.5</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ forcats   1.0.0     ✔ stringr   1.5.1</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ ggplot2   3.5.2     ✔ tibble    3.3.0</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ purrr     1.1.0     </span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ dplyr     1.2.1     ✔ readr     2.2.0</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ forcats   1.0.1     ✔ stringr   1.6.0</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ purrr     1.2.2     </span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ dplyr::filter() masks stats::filter()</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ dplyr::lag()    masks stats::lag()</span></span>
@@ -337,14 +338,14 @@ window.Quarto = {
 <span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `Sheepshead Minnow` &lt;dbl&gt;, `Gulf Killifish` &lt;dbl&gt;, `Freshwater Goby` &lt;dbl&gt;,</span></span>
 <span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `Mosquito Fish` &lt;dbl&gt;, `White Shrimp` &lt;dbl&gt;, `Bay Anchovy` &lt;dbl&gt;,</span></span>
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `Southern Flounder` &lt;dbl&gt;, `Diamond Killifish` &lt;dbl&gt;, `Naked Goby` &lt;dbl&gt;,</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `Brown Shrimp` &lt;dbl&gt;, `Sand Seatrout` &lt;dbl&gt;, Pinfish &lt;dbl&gt;, …</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   `Brown Shrimp` &lt;dbl&gt;, `Sand Seatrout` &lt;dbl&gt;, Pinfish &lt;dbl&gt;, …</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="vegan-diversity-functions" class="level3">
 <h3 class="anchored" data-anchor-id="vegan-diversity-functions"><code>vegan</code> diversity functions</h3>
 <p>There are useful functions in <code>vegan</code> that can be used to calculate diverstiy metrics.</p>
 <p><code>specnumber()</code> calculates species richness. <code>diversity()</code> can calculate Shannon, simpson, and inverse simpson metrics.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading required package: permute</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>marsh_div <span class="ot">=</span> marsh_w <span class="sc">|&gt;</span> </span>
@@ -380,7 +381,7 @@ window.Quarto = {
 <span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>)<span class="sc">+</span></span>
 <span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>)<span class="sc">+</span></span>
 <span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'Month'</span>, <span class="at">y =</span> <span class="st">'Species richness'</span>)<span class="sc">+</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -406,7 +407,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <h3 class="anchored" data-anchor-id="additive-partitioning">Additive partitioning</h3>
 <p><em>Additive partitioning</em> is <span class="math display">\[\overline{\alpha} + \beta = \gamma\]</span> where <span class="math inline">\(\alpha\)</span> is the average diversity of samples, <span class="math inline">\(\gamma\)</span> is the diversity of pooled samples and <span class="math inline">\(\beta\)</span> is found as <span class="math display">\[\beta = \gamma - \overline{\alpha}\]</span> We can think of <span class="math inline">\(\beta\)</span> as the average number of species not found in a sample, but which we know to be in the region. Additive partitioning allows direct comparison of average richness among samples at any hierarchical level of organization because all three measures of diversity <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\gamma\)</span> are expressed in the same units. This makes it analogous to partitioning variance in ANOVA. This is not the case for multiplicative partitioning diversity.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gamma diversity</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gamma diversity</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to long format for plotting</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>marsh_l <span class="ot">=</span> marsh_w <span class="sc">|&gt;</span> </span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">62</span>, </span>
@@ -457,7 +458,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'month'</span>, <span class="at">y =</span> <span class="fu">expression</span>(beta <span class="sc">~</span> <span class="st">'diversity'</span>))<span class="sc">+</span></span>
 <span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
 <span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(a,b,<span class="at">nrow =</span><span class="dv">1</span>, <span class="at">common.legend =</span> T,<span class="at">align =</span> <span class="st">'h'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(a,b,<span class="at">nrow =</span><span class="dv">1</span>, <span class="at">common.legend =</span> T,<span class="at">align =</span> <span class="st">'h'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -472,7 +473,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <p><em>Multiplicative partitioning</em> is <span class="math display">\[\overline{\alpha} \beta = \gamma\]</span> and</p>
 <p><span class="math display">\[\beta = \gamma/\overline{\alpha}\]</span> where <span class="math inline">\(\beta\)</span> is a conversion factor that describes the relative change in species composition among samples. Sometimes this type of <span class="math inline">\(\beta\)</span> diversity is thought of as the number of different community types in a set of samples. However, use this interpretation with great caution, as <span class="math inline">\(\beta\)</span> diversity depends completely on the sizes or extent of the samples used for <span class="math inline">\(\alpha\)</span> diversity.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>betaDiv <span class="ot">=</span> betaDiv <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>betaDiv <span class="ot">=</span> betaDiv <span class="sc">|&gt;</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">beta_m =</span> gamma<span class="sc">/</span>alpha)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -490,7 +491,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'month'</span>, <span class="at">y =</span> <span class="fu">expression</span>(<span class="st">'Multiplicative'</span><span class="sc">~</span>beta <span class="sc">~</span> <span class="st">'diversity'</span>))<span class="sc">+</span></span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(b,m,<span class="at">nrow =</span><span class="dv">1</span>, <span class="at">common.legend =</span> T,<span class="at">align =</span> <span class="st">'h'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(b,m,<span class="at">nrow =</span><span class="dv">1</span>, <span class="at">common.legend =</span> T,<span class="at">align =</span> <span class="st">'h'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -505,7 +506,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <h2 class="anchored" data-anchor-id="species-compositioncommunity-structure">Species composition/Community structure</h2>
 <p>Instead of distilling community data into metrics, comparisons can be made doing with the multivariate method. This is commonly done with distance or dissimilarity, and represent how similar communities are.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filter to 2 species in for visualization</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filter to 2 species in for visualization</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>marsh_spp <span class="ot">=</span> marsh_w <span class="sc">|&gt;</span> </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site) <span class="sc">|&gt;</span> </span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="st">`</span><span class="at">Gulf Menhaden</span><span class="st">`</span>, <span class="st">`</span><span class="at">White Shrimp</span><span class="st">`</span>), mean)) </span>
@@ -513,7 +514,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(marsh_spp, <span class="fu">aes</span>(<span class="st">`</span><span class="at">Gulf Menhaden</span><span class="st">`</span>, <span class="st">`</span><span class="at">White Shrimp</span><span class="st">`</span>, <span class="at">color =</span> site)) <span class="sc">+</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>)<span class="sc">+</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">'turbo'</span>)<span class="sc">+</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -527,20 +528,20 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <p>One way to measure the distance between two points is to use eclidean distance, which is the straight line distance between two points. Euclidean distance between two points <span class="math inline">\(d(p,q)\)</span> can be measured using the following formula <span class="math display">\[d(p,q) = \sqrt{\sum_{i = 1}^{n} (p_i - q_i)^2}\]</span></p>
 <p>Note that this is not great for community data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Example - Euclidean distance between site 15 and site 16</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Example - Euclidean distance between site 15 and site 16</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>gm_diff <span class="ot">=</span> marsh_spp<span class="sc">$</span><span class="st">`</span><span class="at">Gulf Menhaden</span><span class="st">`</span>[<span class="dv">1</span>] <span class="sc">-</span> marsh_spp<span class="sc">$</span><span class="st">`</span><span class="at">Gulf Menhaden</span><span class="st">`</span>[<span class="dv">2</span>] <span class="co">#Atya abundance pool 0 - pool 13</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ws_diff <span class="ot">=</span> marsh_spp<span class="sc">$</span><span class="st">`</span><span class="at">White Shrimp</span><span class="st">`</span>[<span class="dv">1</span>] <span class="sc">-</span> marsh_spp<span class="sc">$</span><span class="st">`</span><span class="at">White Shrimp</span><span class="st">`</span>[<span class="dv">2</span>] <span class="co">#MAC abundance pool 0 - pool 13</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(gm_diff<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>ws_diff<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 441.9072</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 441.9072</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="bray-curtis" class="level3">
 <h3 class="anchored" data-anchor-id="bray-curtis">Bray-Curtis</h3>
 <p>A common distance method for community data is Bray-Curtis. This is the difference in species abundance between two sites divided by the total abundance at each site. Interpret as the proportion of all individuals that would remain unpaired - percentage of dissimilarity. Reflects changes in composition and changes in relative. This can be calculated with the <code>vegan</code> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First, lets create a community species matrix for average at each site</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First, lets create a community species matrix for average at each site</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>marsh_comm <span class="ot">=</span> marsh_w <span class="sc">|&gt;</span> </span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site) <span class="sc">|&gt;</span> </span>
@@ -657,14 +658,14 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="do">## 28 0.4580275 0.5657694                              </span></span>
 <span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a><span class="do">## 30 0.3273796 0.1813950 0.6016133                    </span></span>
 <span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a><span class="do">## 32 0.2464400 0.5135411 0.4736101 0.3304584          </span></span>
-<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a><span class="do">## 51 0.6348868 0.5919694 0.5263653 0.6436799 0.4565301</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a><span class="do">## 51 0.6348868 0.5919694 0.5263653 0.6436799 0.4565301</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="jaccard" class="level3">
 <h3 class="anchored" data-anchor-id="jaccard">Jaccard</h3>
 <p>Another common way to analyze community data is with presence absence data. This is best compared with Jaccard dissimilarity. Represents the proportion of unshared species. Frequently used to interpret turnover. Average Jaccard dissimilarity is a measure of beta diversity.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>jac_dist <span class="ot">=</span> <span class="fu">vegdist</span>(marsh_comm, <span class="at">method =</span> <span class="st">"jaccard"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>jac_dist <span class="ot">=</span> <span class="fu">vegdist</span>(marsh_comm, <span class="at">method =</span> <span class="st">"jaccard"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>jac_dist</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">##           15        16        28        30        32</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 16 0.7083847                                        </span></span>
@@ -674,7 +675,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 51 0.7766737 0.7436944 0.6896977 0.7832181 0.6268735</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(jac_dist)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.6296459</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.6296459</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plot-distance-in-ordination-space" class="level3">
@@ -682,153 +683,147 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <p>Ordination - represent data along a reduced number of orthogonal axis. Or, show us patterns of relationship between samples in the high dimensional space in way smaller number of dimension (2 or 3, or more depending on complexity). Different techniques, which use will depend on the research question or objectives e.g., Principal component analysis, Correspondence Analysis, Pricinpal Coordinate Analysis, and MDS.</p>
 <p>non-metric MDS, most commonly used for data exploration and illustrate patterns. Technique that maximize the rank correlation between dissimilarity matrix and n dimensions space through an iterative process.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>marsh.nmds.bc <span class="ot">=</span> <span class="fu">metaMDS</span>(marsh_comm, <span class="at">distance =</span> <span class="st">"bray"</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">try =</span> <span class="dv">100</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>marsh.nmds.bc <span class="ot">=</span> <span class="fu">metaMDS</span>(marsh_comm, <span class="at">distance =</span> <span class="st">"bray"</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">try =</span> <span class="dv">100</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Square root transformation</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Wisconsin double standardization</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 0 stress 0.01585851 </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 1 stress 0.1015294 </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 2 stress 0.01585852 </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.785402e-05  max resid 6.956363e-05 </span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 3 stress 0.01585851 </span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.263249e-06  max resid 1.921478e-06 </span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 1 stress 0.2181459 </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 2 stress 0.01585851 </span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.589918e-05  max resid 2.842572e-05 </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 3 stress 0.01585852 </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.021899e-05  max resid 5.395139e-05 </span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 4 stress 0.07304488 </span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 5 stress 0.01585852 </span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.486935e-05  max resid 2.054601e-05 </span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 6 stress 0.01585852 </span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.017846e-05  max resid 5.578449e-05 </span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 7 stress 0.01585851 </span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 6.66957e-06  max resid 1.236448e-05 </span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 5 stress 0.07304488 </span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 6 stress 0.01585853 </span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 4.650043e-05  max resid 8.470265e-05 </span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 7 stress 0.1015295 </span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 8 stress 0.2181459 </span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 9 stress 0.1620205 </span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 10 stress 0.01585852 </span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.773547e-05  max resid 3.107521e-05 </span></span>
 <span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 8 stress 0.01585852 </span></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.563074e-05  max resid 2.995697e-05 </span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 11 stress 0.01585852 </span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.517453e-05  max resid 2.893733e-05 </span></span>
 <span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 9 stress 0.2761343 </span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 10 stress 0.1704538 </span></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 11 stress 0.01585852 </span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.000984e-05  max resid 3.665816e-05 </span></span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 12 stress 0.01585851 </span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.227719e-06  max resid 3.757333e-06 </span></span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 13 stress 0.01585852 </span></span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.776083e-05  max resid 3.240773e-05 </span></span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 14 stress 0.01585851 </span></span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.799152e-06  max resid 5.146782e-06 </span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 12 stress 0.01585852 </span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.478871e-05  max resid 4.390578e-05 </span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 13 stress 0.1704538 </span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 14 stress 0.1704538 </span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 15 stress 0.01585852 </span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 4.389376e-06  max resid 7.961049e-06 </span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 16 stress 0.01585852 </span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.285472e-05  max resid 5.892047e-05 </span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 17 stress 0.01585851 </span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.671899e-06  max resid 2.640529e-06 </span></span>
 <span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 15 stress 0.2181459 </span></span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 16 stress 0.07304488 </span></span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 17 stress 0.01585852 </span></span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.960585e-06  max resid 6.078568e-06 </span></span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 18 stress 0.07304488 </span></span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 19 stress 0.01585852 </span></span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.083994e-05  max resid 4.021656e-05 </span></span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 20 stress 0.01585853 </span></span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.970133e-05  max resid 6.864792e-05 </span></span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="do">## *** Best solution repeated 6 times</span></span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>marsh.nmds.ec <span class="ot">=</span> <span class="fu">metaMDS</span>(marsh_comm, <span class="at">distance =</span> <span class="st">"euclidean"</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">try =</span> <span class="dv">100</span>)</span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="do">## Square root transformation</span></span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="do">## Wisconsin double standardization</span></span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 0 stress 9.540595e-05 </span></span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 1 stress 0.04464195 </span></span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 2 stress 9.835859e-05 </span></span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 5.346814e-05  max resid 7.962218e-05 </span></span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 3 stress 7.41739e-05 </span></span>
-<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
-<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.0003529672  max resid 0.0005755744 </span></span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 4 stress 0.2180643 </span></span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 5 stress 0.04464318 </span></span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 6 stress 9.889451e-05 </span></span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.0003981254  max resid 0.0006594403 </span></span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 7 stress 7.800241e-05 </span></span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.1642566  max resid 0.2939474 </span></span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 8 stress 0.04464259 </span></span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 9 stress 8.298705e-05 </span></span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.1642721  max resid 0.2939886 </span></span>
-<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 10 stress 9.69924e-05 </span></span>
-<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.0003936821  max resid 0.0006431985 </span></span>
-<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 11 stress 0.04464379 </span></span>
-<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 12 stress 0.0446428 </span></span>
-<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 13 stress 0.04464164 </span></span>
-<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 14 stress 5.842897e-05 </span></span>
-<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
-<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 7.288367e-05  max resid 9.129702e-05 </span></span>
-<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 15 stress 9.339854e-05 </span></span>
-<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.0001371547  max resid 0.0002062749 </span></span>
-<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 16 stress 0.04464262 </span></span>
-<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 17 stress 0.04464312 </span></span>
-<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 18 stress 9.820101e-05 </span></span>
-<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.0003414749  max resid 0.0005714652 </span></span>
-<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 19 stress 0.04464297 </span></span>
-<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 20 stress 0.2269841 </span></span>
-<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a><span class="do">## *** Best solution repeated 3 times</span></span>
-<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning in metaMDS(marsh_comm, distance = "euclidean", k = 2, try = 100):</span></span>
-<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a><span class="do">## stress is (nearly) zero: you may have insufficient data</span></span>
-<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a>marsh.nmds.jc <span class="ot">=</span> <span class="fu">metaMDS</span>(marsh_comm, <span class="at">distance =</span> <span class="st">"jaccard"</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">try =</span> <span class="dv">100</span>)</span>
-<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a><span class="do">## Square root transformation</span></span>
-<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a><span class="do">## Wisconsin double standardization</span></span>
-<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 0 stress 0.01585851 </span></span>
-<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 1 stress 0.01585852 </span></span>
-<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.322304e-05  max resid 2.507708e-05 </span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 18 stress 0.01585852 </span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.924192e-05  max resid 5.276759e-05 </span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 19 stress 0.2181459 </span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 20 stress 0.01585852 </span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.633102e-05  max resid 2.957548e-05 </span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="do">## *** Best solution repeated 3 times</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>marsh.nmds.ec <span class="ot">=</span> <span class="fu">metaMDS</span>(marsh_comm, <span class="at">distance =</span> <span class="st">"euclidean"</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">try =</span> <span class="dv">100</span>)</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="do">## Square root transformation</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="do">## Wisconsin double standardization</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 0 stress 9.540588e-05 </span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 1 stress 9.582024e-05 </span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.1643647  max resid 0.2940644 </span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 2 stress 0.04464347 </span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 3 stress 0.04464301 </span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 4 stress 0.1181887 </span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 5 stress 8.521167e-05 </span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.164373  max resid 0.294073 </span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 6 stress 0.04464295 </span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 7 stress 9.197064e-05 </span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 5.450839e-05  max resid 9.32595e-05 </span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 8 stress 9.434012e-05 </span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.1642112  max resid 0.2938263 </span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 9 stress 9.39397e-05 </span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.0002329355  max resid 0.0004783049 </span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 10 stress 0.04464256 </span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 11 stress 0.2180647 </span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 12 stress 0.04464362 </span></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 13 stress 9.29514e-05 </span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.1643695  max resid 0.2939859 </span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 14 stress 9.242203e-05 </span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.1643736  max resid 0.2939907 </span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 15 stress 8.911745e-05 </span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.1642252  max resid 0.2938411 </span></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 16 stress 9.16839e-05 </span></span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.573366e-05  max resid 2.730402e-05 </span></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 17 stress 9.761996e-05 </span></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 0.0002327826  max resid 0.0004839246 </span></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 18 stress 0.04464289 </span></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 19 stress 0.04464263 </span></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 20 stress 0.04464295 </span></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="do">## *** Best solution repeated 4 times</span></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning in metaMDS(marsh_comm, distance = "euclidean", k = 2, try = 100):</span></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="do">## stress is (nearly) zero: you may have insufficient data</span></span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a>marsh.nmds.jc <span class="ot">=</span> <span class="fu">metaMDS</span>(marsh_comm, <span class="at">distance =</span> <span class="st">"jaccard"</span>, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">try =</span> <span class="dv">100</span>)</span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a><span class="do">## Square root transformation</span></span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a><span class="do">## Wisconsin double standardization</span></span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 0 stress 0.01585851 </span></span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 1 stress 0.01585851 </span></span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 6.949982e-06  max resid 1.317678e-05 </span></span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 2 stress 0.01585852 </span></span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.411046e-05  max resid 2.736033e-05 </span></span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 3 stress 0.1704538 </span></span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 4 stress 0.07304488 </span></span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 5 stress 0.01585852 </span></span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.654376e-05  max resid 4.928901e-05 </span></span>
 <span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 2 stress 0.1620205 </span></span>
-<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 3 stress 0.01585851 </span></span>
-<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.231216e-06  max resid 5.038954e-06 </span></span>
-<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 4 stress 0.1704538 </span></span>
-<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 5 stress 0.07304488 </span></span>
-<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 6 stress 0.1704538 </span></span>
-<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 7 stress 0.01585851 </span></span>
-<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 4.492855e-06  max resid 7.242175e-06 </span></span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 6 stress 0.01585852 </span></span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 9.449052e-06  max resid 1.474148e-05 </span></span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 7 stress 0.07304488 </span></span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 8 stress 0.2181459 </span></span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 9 stress 0.07304488 </span></span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 10 stress 0.1620205 </span></span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 11 stress 0.01585853 </span></span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 4.367975e-05  max resid 7.999573e-05 </span></span>
 <span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 8 stress 0.01585852 </span></span>
-<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.956132e-05  max resid 3.651298e-05 </span></span>
-<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 9 stress 0.01585852 </span></span>
-<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.103472e-05  max resid 5.828078e-05 </span></span>
-<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 10 stress 0.01585852 </span></span>
-<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.816954e-05  max resid 3.297672e-05 </span></span>
-<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 11 stress 0.2761338 </span></span>
-<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 12 stress 0.01585851 </span></span>
-<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
-<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.21783e-06  max resid 4.314188e-06 </span></span>
-<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-131"><a href="#cb9-131" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 13 stress 0.1704538 </span></span>
-<span id="cb9-132"><a href="#cb9-132" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 14 stress 0.01585852 </span></span>
-<span id="cb9-133"><a href="#cb9-133" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 4.783311e-06  max resid 8.650997e-06 </span></span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 12 stress 0.07304488 </span></span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 13 stress 0.01585851 </span></span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a><span class="do">## ... New best solution</span></span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 5.350198e-06  max resid 1.032471e-05 </span></span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 14 stress 0.01585852 </span></span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.497829e-05  max resid 4.675507e-05 </span></span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 15 stress 0.01585853 </span></span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 3.10643e-05  max resid 6.062601e-05 </span></span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 16 stress 0.2651193 </span></span>
+<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 17 stress 0.01585852 </span></span>
+<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.42146e-05  max resid 2.607578e-05 </span></span>
+<span id="cb9-131"><a href="#cb9-131" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
+<span id="cb9-132"><a href="#cb9-132" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 18 stress 0.01585852 </span></span>
+<span id="cb9-133"><a href="#cb9-133" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.528698e-05  max resid 2.652946e-05 </span></span>
 <span id="cb9-134"><a href="#cb9-134" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-135"><a href="#cb9-135" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 15 stress 0.01585851 </span></span>
-<span id="cb9-136"><a href="#cb9-136" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 8.199684e-06  max resid 1.483314e-05 </span></span>
+<span id="cb9-135"><a href="#cb9-135" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 19 stress 0.01585852 </span></span>
+<span id="cb9-136"><a href="#cb9-136" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 1.372194e-05  max resid 2.224409e-05 </span></span>
 <span id="cb9-137"><a href="#cb9-137" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-138"><a href="#cb9-138" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 16 stress 0.2181459 </span></span>
-<span id="cb9-139"><a href="#cb9-139" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 17 stress 0.01585852 </span></span>
-<span id="cb9-140"><a href="#cb9-140" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Procrustes: rmse 2.607681e-05  max resid 4.718207e-05 </span></span>
-<span id="cb9-141"><a href="#cb9-141" aria-hidden="true" tabindex="-1"></a><span class="do">## ... Similar to previous best</span></span>
-<span id="cb9-142"><a href="#cb9-142" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 18 stress 0.1704538 </span></span>
-<span id="cb9-143"><a href="#cb9-143" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 19 stress 0.2181459 </span></span>
-<span id="cb9-144"><a href="#cb9-144" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 20 stress 0.1620205 </span></span>
-<span id="cb9-145"><a href="#cb9-145" aria-hidden="true" tabindex="-1"></a><span class="do">## *** Best solution repeated 4 times</span></span>
-<span id="cb9-146"><a href="#cb9-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-147"><a href="#cb9-147" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(marsh.nmds.bc, <span class="at">display =</span> <span class="st">"sites"</span>, <span class="at">type =</span> <span class="st">"text"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-138"><a href="#cb9-138" aria-hidden="true" tabindex="-1"></a><span class="do">## Run 20 stress 0.07304488 </span></span>
+<span id="cb9-139"><a href="#cb9-139" aria-hidden="true" tabindex="-1"></a><span class="do">## *** Best solution repeated 6 times</span></span>
+<span id="cb9-140"><a href="#cb9-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-141"><a href="#cb9-141" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(marsh.nmds.bc, <span class="at">display =</span> <span class="st">"sites"</span>, <span class="at">type =</span> <span class="st">"text"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -839,7 +834,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 </div>
 <p>The output is a list, so need to extract data to plot in ggplot</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>nmds_output <span class="ot">=</span> <span class="fu">bind_rows</span>(<span class="at">bc =</span> <span class="fu">data.frame</span>(marsh.nmds.bc[[<span class="st">"points"</span>]]),</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>nmds_output <span class="ot">=</span> <span class="fu">bind_rows</span>(<span class="at">bc =</span> <span class="fu">data.frame</span>(marsh.nmds.bc[[<span class="st">"points"</span>]]),</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ec =</span> <span class="fu">data.frame</span>(marsh.nmds.ec[[<span class="st">"points"</span>]]),</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">jc =</span> <span class="fu">data.frame</span>(marsh.nmds.jc[[<span class="st">"points"</span>]])) <span class="sc">|&gt;</span> </span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">site =</span> <span class="fu">rep</span>(<span class="fu">unique</span>(marsh_spp<span class="sc">$</span>site), <span class="at">times =</span> <span class="dv">3</span>),</span>
@@ -851,7 +846,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Dissimilarity)<span class="sc">+</span></span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">'site'</span>)<span class="sc">+</span></span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">'turbo'</span>)<span class="sc">+</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -865,17 +860,21 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <section id="diversity-partitioning-1" class="level2">
 <h2 class="anchored" data-anchor-id="diversity-partitioning-1">Diversity partitioning</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>marsh_spp<span class="fl">.2</span> <span class="ot">=</span> marsh_l <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>marsh_spp<span class="fl">.2</span> <span class="ot">=</span> marsh_l <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PA =</span> <span class="fu">if_else</span>(Count <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, Species) <span class="sc">|&gt;</span> </span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_count =</span> <span class="fu">mean</span>(Count, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_PA =</span> <span class="fu">mean</span>(PA, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="do">## `summarise()` has grouped output by 'site'. You can override using the</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="do">## `.groups` argument.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="do">## `summarise()` has regrouped the output.</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Summaries were computed grouped by site and Species.</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Output is grouped by site.</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Use `summarise(.groups = "drop_last")` to silence this message.</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Use `summarise(.by = c(site, Species))` for per-operation grouping</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="do">##   (`?dplyr::dplyr_by`) instead.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Let’s explore how presence/absence and counts varies between species and pools</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>PA_dist <span class="ot">=</span> <span class="fu">ggplot</span>(marsh_spp<span class="fl">.2</span>, <span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">y =</span> site, <span class="at">fill =</span> mean_PA))<span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>PA_dist <span class="ot">=</span> <span class="fu">ggplot</span>(marsh_spp<span class="fl">.2</span>, <span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">y =</span> site, <span class="at">fill =</span> mean_PA))<span class="sc">+</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>()<span class="sc">+</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">'mako'</span>)<span class="sc">+</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'site'</span>)<span class="sc">+</span></span>
@@ -888,7 +887,7 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(PA_dist, Co_dist,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">align =</span> <span class="st">'v'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">align =</span> <span class="st">'v'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -965,13 +964,14 @@ Gamma diversity, <span class="math inline">\(\gamma\)</span>, is the diversity o
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

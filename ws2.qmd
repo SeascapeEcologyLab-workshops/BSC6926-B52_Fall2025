@@ -481,7 +481,7 @@ colors = c('Calcasieu' = 'darkred',
           'Vermilion-Teche' = 'cadetblue4',
           'Terrebonne' = '#FFC125',
           'Barataria' = '#5d478b',
-          'Pontchartrain' = 'grey55')
+          'Pontchartrain' = 'grey68')
 
 ggplot(df, aes(x = basin, y = seines, fill = basin))+
   geom_boxplot()+
